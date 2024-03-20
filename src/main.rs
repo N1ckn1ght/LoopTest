@@ -1,5 +1,9 @@
 use std::io;
 
+mod engine;
+
+const LARGE: u128 = 1 << 63;
+
 fn main() {
     let mut state: u16  = 0;
     let mut clock: u128 = 0;
