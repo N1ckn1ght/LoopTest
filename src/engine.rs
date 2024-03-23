@@ -21,6 +21,7 @@ impl Default for Engine {
 
 impl Engine {
     pub fn calc(&mut self, new_time_limit_ms: u128) -> u128 {
+        self.time_start_point = Instant::now();
         self.time_limit_ms = new_time_limit_ms;
         self.abort = false;
         
