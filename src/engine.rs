@@ -1,4 +1,4 @@
-use std::time::Instant;
+use std::{thread, time::{Duration, Instant}};
 
 pub struct Engine {
     pub variable: u128,
@@ -47,10 +47,10 @@ impl Engine {
     }
 
     pub fn update(&mut self) {
+        thread::sleep(Duration::from_millis(1));
         if self.time_start_point.elapsed().as_millis() > self.time_limit_ms {
             self.abort = true;
         }
-
         // some other conditional code...
     }
 }
