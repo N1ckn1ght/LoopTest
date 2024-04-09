@@ -4,18 +4,16 @@ mod engine;
 use std::io;
 use std::thread;
 use std::time::{Duration, Instant};
-use common::State;
 use engine::Engine;
+
+pub enum State {
+    Halted,
+    Started
+}
 
 fn main() {
     let mut engine = Engine::default();
     let mut state = State::Halted;
-    // let builder = thread::Builder::new()
-    //     .name("engine".to_string())
-    //     .spawn(||
-    // {
-        
-    // }).unwrap();
     loop {
         let mut input = String::new();
         match io::stdin().read_line(&mut input) {
