@@ -1,25 +1,27 @@
-use std::{thread, time::{Duration, Instant}};
+use std::thread;
+use std::time::{Duration, Instant};
+use std::sync::mpsc::Receiver;
 
-pub struct Engine {
+pub struct Engine<'a> {
     pub variable: u128,
     pub abort: bool,
 
     pub time_start_point: Instant,
-    pub time_limit_ms: u128
-}
+    pub time_limit_ms: u128,
 
-impl Default for Engine {
-    fn default() -> Engine {
+    pub rx: &'a Receiver<String>
+}
+impl Engine<'static> {
+    pub fn init (rx: &'static Receiver<String>) -> Engine {
         Self {
             variable: 0,
             abort: true,
             time_start_point: Instant::now(),
-            time_limit_ms: 0
+            time_limit_ms: 0,
+            rx
         }
     }
-}
 
-impl Engine {
     pub fn calc(&mut self, new_time_limit_ms: u128) -> u128 {
         self.time_start_point = Instant::now();
         self.time_limit_ms = new_time_limit_ms;
@@ -48,6 +50,7 @@ impl Engine {
 
     pub fn update(&mut self) {
         thread::sleep(Duration::from_millis(1));
+        
         // some other conditional code...
         if self.abort {
             return;
@@ -55,6 +58,16 @@ impl Engine {
         if self.time_start_point.elapsed().as_millis() > self.time_limit_ms {
             println!("calculated {}", self.variable);
             self.abort = true;
+        }
+    }
+
+    pub fn listen(&mut self) {
+        loop {
+            thread::sleep(Duration::from_millis(1));
+            // recieve: TODO
+            if true {
+                break;
+            }
         }
     }
 }
