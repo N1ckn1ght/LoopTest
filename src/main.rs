@@ -8,7 +8,7 @@ use engine::Engine;
 
 fn main() {
     let (tx, rx) = channel();
-    let mut engine = Engine::init(&rx);
+    let mut engine = Engine::init(rx);
     engine.listen();
 
     let handle = thread::spawn(move || {
@@ -32,6 +32,6 @@ fn main() {
             thread::sleep(Duration::from_millis(1));
         }
     });
-    
-    handle.join();
+
+    let _ = handle.join();
 }
