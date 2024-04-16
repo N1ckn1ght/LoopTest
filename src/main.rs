@@ -9,7 +9,6 @@ use engine::Engine;
 fn main() {
     let (tx, rx) = channel();
     let mut engine = Engine::init(rx);
-    engine.listen();
 
     let handle = thread::spawn(move || {
         loop {
@@ -17,7 +16,7 @@ fn main() {
             let mut quit = false;
             match io::stdin().read_line(&mut input) {
                 Ok(_goes_into_input_above) => {
-                    if input == "quit" {
+                    if input.trim() == "quit" {
                         quit = true;
                     }
                     let _ = tx.send(input);
@@ -32,6 +31,8 @@ fn main() {
             thread::sleep(Duration::from_millis(1));
         }
     });
+
+    engine.listen();
 
     let _ = handle.join();
 }

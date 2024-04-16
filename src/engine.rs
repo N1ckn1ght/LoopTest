@@ -21,6 +21,7 @@ pub struct Engine {
 
     pub rx: Receiver<String>,
     pub print: bool,
+    pub quit: bool
 }
 
 impl Engine {
@@ -31,7 +32,8 @@ impl Engine {
             time_start_point: Instant::now(),
             time_limit_ms: 0,
             rx,
-            print: false
+            print: false,
+            quit: false
         }
     }
 
@@ -84,6 +86,12 @@ impl Engine {
                 Signal::Now => {
                     self.abort = true;
                 },
+                Signal::Quit => {
+                    println!("update(), quit signal detected!");
+                    self.abort = true;
+                    self.print = false;
+                    self.quit = true;
+                }
                 _ => {
                     println!("update() error: impossible command?")
                 }
@@ -116,14 +124,18 @@ impl Engine {
                     self.calc(ntl(value));
                     if self.print {
                         println!("listen(), current: {}", self.variable);
+                    } else {
+                        println!("listen(), cycle ended");
                     }
                 },
                 Signal::Ponder => {
                     println!("listen(), pondering now...");
                     self.print = true;
-                    self.calc(ntl(value));
+                    self.calc(1 << 64);
                     if self.print {
                         println!("listen(), current: {}", self.variable);
+                    } else {
+                        println!("listen(), cycle ended");
                     }
                 },
                 Signal::Clear => {
@@ -137,6 +149,10 @@ impl Engine {
                 _ => {
                     println!("listen() error: impossible command?")
                 }
+            }
+
+            if self.quit {
+                break;
             }
         }
     }
